@@ -537,7 +537,7 @@ namespace scrape_getfpv_com
         /// Парсинг товара
         /// </summary>
         /// <param name="name">Название товара</param>
-        /// <param name="link">Ссылка на страницу с товаром</param>
+        /// <param name="link">Ссылка на страницу с товаром</param>///
         void ScrapeProduct(string name, string link)
         {
             string res = net.GET(link);
