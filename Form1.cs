@@ -76,32 +76,34 @@ namespace scrape_getfpv_com
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            //ProxyIp.Text = "122.138.168.182:8197";
 
+            //ProxyIp.Text = "149.202.38.124:32321";
             //TrialCheck();
 
             //nkYellOw
-            AddToListBox("Загрузка...");
+            //AddToListBox("Загрузка...");
 
-            progressBar1.Maximum = 40;
-            progressBar1.Value = 0;
+            //progressBar1.Maximum = 40;
+            //progressBar1.Value = 0;
 
-            new Task(() =>
-      {
-          changeMaximumBar(40);
-          SetProgress(0);
+            //new Task(() =>
+            //{
+            //changeMaximumBar(40);
+            //SetProgress(0);
 
-          ScrapeCategory();
+            //ScrapeCategory();
 
-          ClearTreeView();
-          LoadTreeView();
+            //ClearTreeView();
+            //LoadTreeView();
 
-          //nkYellOw
-          RemoveFromListBox(0);
-          AddToListBox("Группы загружены!");
-          changeMaximumBar(100);
-          SetProgress(0);
+            //nkYellOw
+            //RemoveFromListBox(0);
+            //AddToListBox("Группы загружены!");
+            //changeMaximumBar(100);
+            //SetProgress(0);
 
-      }).Start();
+            //}).Start();
 
         }
 
@@ -124,18 +126,18 @@ namespace scrape_getfpv_com
 
         }
 
-        private void RemoveFromListBox(int v)
+        private void RemoveFromListBox()
         {
             if (listBox1.InvokeRequired)
             {
                 listBox1.BeginInvoke(new Action(() =>
                 {
-                    listBox1.Items.Remove(listBox1.Items[v]);
+                    listBox1.Items.Clear();
                 }));
             }
             else
             {
-                listBox1.Items.Remove(listBox1.Items[v]);
+                listBox1.Items.Clear();
             }
         }
 
@@ -145,16 +147,26 @@ namespace scrape_getfpv_com
 
         private void Button_StartScrape_Click(object sender, EventArgs e)
         {
+            int downloadDelay = Convert.ToInt32(DownloadDelay.Value)*1000;
+            string proxyIp = "";
+            if (ProxyIp.SelectedItem != null)
+            {
+                proxyIp = ProxyIp.SelectedItem.ToString();
+            }
+
+
             AddToListBox($"Всего выбрано {countCheckedCategory} категорий");
             SetProgress(0);
             countCategoryNow = 0;
             /// TEST
             new Task(() =>
             {
-                SetInterface(false);
+            SetInterface(false);
 
-                for (int i = 0; i < categories.Count; i++)
-                {
+            for (int i = 0; i < categories.Count; i++)
+            {
+                Sleep(downloadDelay);
+
                     folderPath = Func.WindowsFileNameClear(categories[i].Name);
 
                     if (categories[i].Checked)
@@ -164,12 +176,14 @@ namespace scrape_getfpv_com
                             Directory.CreateDirectory(folderPath);//
                   }
 
-                        ScrapeProductList(categories[i]);
+                        ScrapeProductList(categories[i], proxyIp, downloadDelay);
                         SetProgress(Func.ProgressProcent(++countCategoryNow, countCheckedCategory));
                     }
 
                     for (int j = 0; j < categories[i].Children.Count; j++)
                     {
+                        Sleep(downloadDelay);
+
                         folderPath += "\\" + Func.WindowsFileNameClear(categories[i].Children[j].Name);
 
                         if (categories[i].Children[j].Checked)
@@ -179,12 +193,14 @@ namespace scrape_getfpv_com
                                 Directory.CreateDirectory(folderPath);
                             }
 
-                            ScrapeProductList(categories[i].Children[j]);
+                            ScrapeProductList(categories[i].Children[j], proxyIp, downloadDelay);
                             SetProgress(Func.ProgressProcent(++countCategoryNow, countCheckedCategory));
                         }
 
                         for (int k = 0; k < categories[i].Children[j].Children.Count; k++)
                         {
+                            Sleep(downloadDelay);
+
                             folderPath += "\\" + Func.WindowsFileNameClear(categories[i].Children[j].Children[k].Name);
 
                             if (categories[i].Children[j].Children[k].Checked)
@@ -194,7 +210,7 @@ namespace scrape_getfpv_com
                                     Directory.CreateDirectory(folderPath);
                                 }
 
-                                ScrapeProductList(categories[i].Children[j].Children[k]);
+                                ScrapeProductList(categories[i].Children[j].Children[k], proxyIp, downloadDelay);
                                 SetProgress(Func.ProgressProcent(++countCategoryNow, countCheckedCategory));
                             }
 
@@ -226,7 +242,7 @@ namespace scrape_getfpv_com
             }
             categoryContains.Add(e.Node.Text);
 
-            CheckFromTree(categoryContains);
+            CheckFromTree(categoryContains,e.Node.Checked);
         }
 
         /// <summary>
@@ -393,6 +409,70 @@ namespace scrape_getfpv_com
             {
                 checkBoxDownloadPhoto.Enabled = value;
             }
+
+            if (downloadGroups.InvokeRequired)
+            {
+                downloadGroups.BeginInvoke(new Action(() =>
+                {
+                    downloadGroups.Enabled = value;
+                }));
+            }
+            else
+            {
+                downloadGroups.Enabled = value;
+            }
+
+            if (checkBoxAll_ON.InvokeRequired)
+            {
+                checkBoxAll_ON.BeginInvoke(new Action(() =>
+                {
+                    checkBoxAll_ON.Enabled = value;
+                }));
+            }
+            else
+            {
+                checkBoxAll_ON.Enabled = value;
+            }
+
+            if (checkBoxAll_OFF.InvokeRequired)
+            {
+                checkBoxAll_OFF.BeginInvoke(new Action(() =>
+                {
+                    checkBoxAll_OFF.Enabled = value;
+                }));
+            }
+            else
+            {
+                checkBoxAll_OFF.Enabled = value;
+            }
+
+            if (ProxyIp.InvokeRequired)
+            {
+                ProxyIp.BeginInvoke(new Action(() =>
+                {
+                    ProxyIp.Enabled = value;
+                }));
+            }
+            else
+            {
+                ProxyIp.Enabled = value;
+            }
+
+            if (DownloadDelay.InvokeRequired)
+            {
+                DownloadDelay.BeginInvoke(new Action(() =>
+                {
+                    DownloadDelay.Enabled = value;
+                }));
+            }
+            else
+            {
+                DownloadDelay.Enabled = value;
+            }
+
+            
+
+
         }
 
         #endregion
@@ -400,15 +480,19 @@ namespace scrape_getfpv_com
         /// <summary>
         /// Парсинг категорий с сайта
         /// </summary>
-        void ScrapeCategory()
+        void ScrapeCategory(string proxyIp="")
         {
+            int downloadDelay = Convert.ToInt32(DownloadDelay.Value)*1000;
 
-            string res = net.GET(baseUrl);
+            string res = net.GET(baseUrl,null,null,null, proxyIp, downloadDelay);
 
             CQ dom = CQ.Create(res);
             var categoryList = dom["a.level0"];
             for (int i = 0; i < categoryList.Length; i++)
             {
+                
+                Sleep(downloadDelay);
+                
                 SetProgress(i);
 
                 var category = categoryList.Eq(i);
@@ -424,6 +508,7 @@ namespace scrape_getfpv_com
                     var subCategoryList = category.Parent().Find("a.level1");
                     for (int j = 0; j < subCategoryList.Length; j++)
                     {
+                        Sleep(downloadDelay);
                         var subCategory = subCategoryList.Eq(j);
                         categories[categories.Count - 1].Children.Add(new Category
                         {
@@ -433,9 +518,11 @@ namespace scrape_getfpv_com
                         });
                         if (subCategory.HasClass("has-children"))
                         {
+                            Sleep(downloadDelay);
                             var subSubCategoryList = subCategory.Parent().Find("a.level2");
                             for (int k = 0; k < subSubCategoryList.Length; k++)
                             {
+                                Sleep(downloadDelay);
                                 var subSubCategory = subSubCategoryList.Eq(k);
                                 int lastChildrenIndex = categories[categories.Count - 1].Children.Count - 1;
                                 categories[categories.Count - 1].Children[lastChildrenIndex].Children.Add(new Category
@@ -451,11 +538,12 @@ namespace scrape_getfpv_com
                 else
                 {
                     // В родительской категории нет подкатегорий - проверить на странице
-                    string resCategory = net.GET(categories[categories.Count - 1].Link);
+                    string resCategory = net.GET(categories[categories.Count - 1].Link,null,null,null, proxyIp,downloadDelay);
                     var pageCategory = CQ.Create(resCategory);
                     var subCategoryOnPage = pageCategory["ul li h3 a"];
                     for (int j = 0; j < subCategoryOnPage.Length; j++)
                     {
+                        Sleep(downloadDelay);
                         categories[categories.Count - 1].Children.Add(new Category
                         {
                             Name = subCategoryOnPage.Eq(j).Text(),
@@ -467,11 +555,16 @@ namespace scrape_getfpv_com
             }
         }
 
+        public void Sleep(int v)
+        {
+            System.Threading.Thread.Sleep(v);
+        }
+
         /// <summary>
         /// Парсинг списка товаров на странице категории
         /// </summary>
         /// <param name="category">Объект категории</param>
-        void ScrapeProductList(Category category)
+        void ScrapeProductList(Category category,string proxyIp="",int downloadDelay=0)
         {
             CQ dom = null;
             int page = 1;
@@ -485,7 +578,7 @@ namespace scrape_getfpv_com
                     link += "&p=" + page;
                 }
 
-                string res = net.GET(link);
+                string res = net.GET(link,null,null,null,"", downloadDelay);
                 if (net.ResponseUri != link)
                 {
                     // Если произошел редирект на другую страницу - Пример: категория FPV Cameras
@@ -496,7 +589,7 @@ namespace scrape_getfpv_com
                         link += "&p=" + page;
                     }
 
-                    res = net.GET(link);
+                    res = net.GET(link,null,null,null, proxyIp, downloadDelay);
                 }
 
                 dom = CQ.Create(res);
@@ -519,14 +612,14 @@ namespace scrape_getfpv_com
 
                     for (int i = 0; i < categoryListOnPage.Count; i++)
                     {
-                        ScrapeProductList(categoryListOnPage[i]);
+                        ScrapeProductList(categoryListOnPage[i], proxyIp, downloadDelay);
                     }
 
                     return;
                 }
                 for (int i = 0; i < productList.Length; i++)
                 {
-                    ScrapeProduct(productList.Eq(i).Text().Trim(), productList.Eq(i).Attr("href"));
+                    ScrapeProduct(productList.Eq(i).Text().Trim(), productList.Eq(i).Attr("href"),proxyIp,downloadDelay);
                 }
 
                 page++;
@@ -538,9 +631,10 @@ namespace scrape_getfpv_com
         /// </summary>
         /// <param name="name">Название товара</param>
         /// <param name="link">Ссылка на страницу с товаром</param>///
-        void ScrapeProduct(string name, string link)
+        void ScrapeProduct(string name, string link,string proxyIp="", int downloadDelay=0)
         {
-            string res = net.GET(link);
+             
+            string res = net.GET(link,null,null,null,proxyIp,downloadDelay);
 
             var dom = CQ.Create(res);
 
@@ -556,6 +650,8 @@ namespace scrape_getfpv_com
                 var imageList = dom[".product-image-gallery img[id^='image']"];
                 for (int i = 1; i < imageList.Length && i <= 3; i++)
                 {
+                    Sleep(downloadDelay);
+
                     string imageSrc = imageList.Eq(i).Attr("src");
                     string fileName = Func.WindowsFileNameClear(name) + "_" + (i).ToString() + imageSrc.Remove(0, imageSrc.LastIndexOf("."));
                     net.DownloadFile(imageSrc, folderPath + "\\" + fileName);
@@ -600,8 +696,10 @@ namespace scrape_getfpv_com
         /// Устанавливаем флаг выбора определенной категории в коллекции categories
         /// </summary>
         /// <param name="checkedCategory">Коллекция названий категорий согласно вложенности</param>
-        private void CheckFromTree(List<string> checkedCategory)
+        private void CheckFromTree(List<string> checkedCategory,bool turnOn=false)
         {
+            if (categories.Count == 0) return;
+
             int level0Index = -1;
             int level1Index = -1;
             int level2Index = -1;
@@ -640,7 +738,7 @@ namespace scrape_getfpv_com
                         }
                     }
 
-                    categories[level0Index].Children[level1Index].Children[level2Index].Checked = !categories[level0Index].Children[level1Index].Children[level2Index].Checked;
+                    categories[level0Index].Children[level1Index].Children[level2Index].Checked = turnOn;//!categories[level0Index].Children[level1Index].Children[level2Index].Checked;
                     if (categories[level0Index].Children[level1Index].Children[level2Index].Checked)
                     {
                         countCheckedCategory++;
@@ -652,7 +750,7 @@ namespace scrape_getfpv_com
                 }
                 else
                 {
-                    categories[level0Index].Children[level1Index].Checked = !categories[level0Index].Children[level1Index].Checked;
+                    categories[level0Index].Children[level1Index].Checked = turnOn;//!categories[level0Index].Children[level1Index].Checked;
                     if (categories[level0Index].Children[level1Index].Checked)
                     {
                         countCheckedCategory++;
@@ -665,7 +763,7 @@ namespace scrape_getfpv_com
             }
             else
             {
-                categories[level0Index].Checked = !categories[level0Index].Checked;
+                categories[level0Index].Checked = turnOn;//!categories[level0Index].Checked;
                 if (categories[level0Index].Checked)
                 {
                     countCheckedCategory++;
@@ -716,7 +814,7 @@ namespace scrape_getfpv_com
                         categoryContains.Add(firstNode.Text);
                         categoryContains.Add(secondNode.Text);
                         categoryContains.Add(threeNode.Text);
-                        CheckFromTree(categoryContains);
+                        CheckFromTree(categoryContains, v);
 
                     }
 
@@ -725,7 +823,7 @@ namespace scrape_getfpv_com
                         categoryContains.Clear();
                         categoryContains.Add(firstNode.Text);
                         categoryContains.Add(secondNode.Text);
-                        CheckFromTree(categoryContains);
+                        CheckFromTree(categoryContains, v);
                     }
                 }
 
@@ -733,7 +831,7 @@ namespace scrape_getfpv_com
                 {
                     categoryContains.Clear();
                     categoryContains.Add(firstNode.Text);
-                    CheckFromTree(categoryContains);
+                    CheckFromTree(categoryContains, v);
                 }
             }
 
@@ -753,6 +851,76 @@ namespace scrape_getfpv_com
 
         private void checkBoxDownloadPhoto_CheckedChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void downloadGroups_Click(object sender, EventArgs e)
+        {
+            string proxyIp = "";
+            if (ProxyIp.SelectedItem != null)
+            {
+                proxyIp = ProxyIp.SelectedItem.ToString();
+            }
+            //TrialCheck();
+
+            //nkYellOw
+            AddToListBox("Загрузка...");
+
+            progressBar1.Maximum = 40;
+            progressBar1.Value = 0;
+
+            new Task(() =>
+            {
+                changeMaximumBar(40);
+                SetProgress(0);
+
+                ScrapeCategory(proxyIp);
+
+                ClearTreeView();
+                LoadTreeView();
+
+                //nkYellOw
+                RemoveFromListBox();
+                AddToListBox("Группы загружены!");
+                changeMaximumBar(100);
+                SetProgress(0);
+
+            }).Start();
+        }
+
+        private void downloadGroups_Click_1(object sender, EventArgs e)
+        {
+            string proxyIp = "";
+            if (ProxyIp.SelectedItem != null)
+            {
+                proxyIp = ProxyIp.SelectedItem.ToString();
+            }
+            //TrialCheck();
+
+            //nkYellOw
+            AddToListBox("Загрузка...");
+
+            progressBar1.Maximum = 40;
+            progressBar1.Value = 0;
+
+            new Task(() =>
+            {
+            //changeMaximumBar(40);
+            SetProgress(0);
+
+            ScrapeCategory(proxyIp);
+
+            ClearTreeView();
+            LoadTreeView();
+
+            //nkYellOw
+            RemoveFromListBox();
+            AddToListBox("Группы загружены!");
+            changeMaximumBar(100);
+            SetProgress(0);
+
+            }).Start();
+
 
         }
     }

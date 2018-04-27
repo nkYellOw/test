@@ -14,55 +14,63 @@ namespace scrape_getfpv_com
     public string ResponseUri { get; set; }
 
     public string GET(string link, Dictionary<string, object> data = null,
-                               NameValueCollection headers = null, string payloadData = null)
+                               NameValueCollection headers = null, string payloadData = null,string Proxy="",int downloadDelay=0)
     {
       using (var wc = new CookieWebClient())
       {
         wc.CookieContainer = cookie;
         wc.Encoding = Encoding;
 
+                if (!string.IsNullOrEmpty(Proxy))
+                {
+                    WebProxy webProxy = new WebProxy(Proxy, true);
+                    webProxy.UseDefaultCredentials = true;
+                    wc.Proxy = webProxy;
+
+                }
+
         if (headers != null)
         {
           for (int i = 0; i < headers.Count; i++)
-          {
-                       
+                    {
+                        Sleep(downloadDelay);
 
-            switch (headers.GetKey(i).ToLower())
-            {
-              case "accept":
-                wc.Headers.Add(HttpRequestHeader.Accept, headers.Get(i));
-                break;
-              case "content-type":
-                wc.Headers.Add(HttpRequestHeader.ContentType, headers.Get(i));
-                break;
-              case "referer":
-                wc.Headers.Add(HttpRequestHeader.Referer, headers.Get(i));
-                break;
-              case "host":
-                wc.Headers.Add(HttpRequestHeader.Host, headers.Get(i));
-                break;
-              case "connection":
-                if (headers.Get(i) == "keep-alive")
-                {
-                  wc.Headers.Add(HttpRequestHeader.KeepAlive, "true");
+                        switch (headers.GetKey(i).ToLower())
+                        {
+                            case "accept":
+                                wc.Headers.Add(HttpRequestHeader.Accept, headers.Get(i));
+                                break;
+                            case "content-type":
+                                wc.Headers.Add(HttpRequestHeader.ContentType, headers.Get(i));
+                                break;
+                            case "referer":
+                                wc.Headers.Add(HttpRequestHeader.Referer, headers.Get(i));
+                                break;
+                            case "host":
+                                wc.Headers.Add(HttpRequestHeader.Host, headers.Get(i));
+                                break;
+                            case "connection":
+                                if (headers.Get(i) == "keep-alive")
+                                {
+                                    wc.Headers.Add(HttpRequestHeader.KeepAlive, "true");
+                                }
+                                else
+                                {
+                                    wc.Headers.Add(HttpRequestHeader.Connection, headers.Get(i));
+                                }
+                                break;
+                            case "content-length":
+                                wc.Headers.Add(HttpRequestHeader.ContentLength, headers.Get(i).ToString());
+                                break;
+                            case "user-agent":
+                                wc.Headers.Add(HttpRequestHeader.UserAgent, headers.Get(i));
+                                break;
+                            default:
+                                wc.Headers.Add(headers.GetKey(i), headers.Get(i).ToString());
+                                break;
+                        }
+                    }
                 }
-                else
-                {
-                  wc.Headers.Add(HttpRequestHeader.Connection, headers.Get(i));
-                }
-                break;
-              case "content-length":
-                wc.Headers.Add(HttpRequestHeader.ContentLength, headers.Get(i).ToString());
-                break;
-              case "user-agent":
-                wc.Headers.Add(HttpRequestHeader.UserAgent, headers.Get(i));
-                break;
-              default:
-                wc.Headers.Add(headers.GetKey(i), headers.Get(i).ToString());
-                break;
-            }
-          }
-        }
 
         string dataStr = "";
         if (data != null)
@@ -77,7 +85,12 @@ namespace scrape_getfpv_com
       }
     }
 
-    public string POST(string link, Dictionary<string, object> data = null,
+        private static void Sleep(int downloadDelay)
+        {
+            System.Threading.Thread.Sleep(downloadDelay);
+        }
+
+        public string POST(string link, Dictionary<string, object> data = null,
                                 NameValueCollection headers = null, string payloadData = null)
     {
       using (var wc = new CookieWebClient())
@@ -171,6 +184,7 @@ public class CookieWebClient : WebClient
   protected override WebResponse GetWebResponse(WebRequest request)
   {
     WebResponse response = base.GetWebResponse(request);
+
     _responseUri = response.ResponseUri;
     return response;
   }
@@ -178,7 +192,7 @@ public class CookieWebClient : WebClient
 
   protected override WebRequest GetWebRequest(Uri address)
   {
-    WebRequest request = base.GetWebRequest(address);
+        WebRequest request = base.GetWebRequest(address);
     if (request is HttpWebRequest)
     {
       (request as HttpWebRequest).CookieContainer = m_container;
