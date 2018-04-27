@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//
+//..
 
 namespace scrape_getfpv_com
 {
@@ -471,7 +471,20 @@ namespace scrape_getfpv_com
                 DownloadDelay.Enabled = value;
             }
 
-            
+
+            if (treeView1.InvokeRequired)
+            {
+                treeView1.BeginInvoke(new Action(() =>
+                {
+                    treeView1.Enabled = value;
+                }));
+            }
+            else
+            {
+                treeView1.Enabled = value;
+            }
+
+
 
 
         }
@@ -488,6 +501,7 @@ namespace scrape_getfpv_com
             string res = net.GET(baseUrl,null,null,null, proxyIp, downloadDelay);
 
             CQ dom = CQ.Create(res);
+            
             var categoryList = dom["a.level0"];
             for (int i = 0; i < categoryList.Length; i++)
             {
@@ -891,6 +905,7 @@ namespace scrape_getfpv_com
 
         private void downloadGroups_Click_1(object sender, EventArgs e)
         {
+            SetInterface(false);
             string proxyIp = "";
             if (ProxyIp.SelectedItem != null)
             {
@@ -919,6 +934,7 @@ namespace scrape_getfpv_com
             AddToListBox("Группы загружены!");
             changeMaximumBar(100);
             SetProgress(0);
+            SetInterface(true);
 
             }).Start();
 
