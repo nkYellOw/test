@@ -670,7 +670,11 @@ namespace scrape_getfpv_com
 
                     string imageSrc = imageList.Eq(i).Attr("src");
                     string fileName = Func.WindowsFileNameClear(name) + "_" + (i).ToString() + imageSrc.Remove(0, imageSrc.LastIndexOf("."));
-                    net.DownloadFile(imageSrc, folderPath + "\\" + fileName);
+
+                    if (!File.Exists(folderPath + "\\" + fileName))
+                    {
+                        net.DownloadFile(imageSrc, folderPath + "\\" + fileName);
+                    }
 
                     string filePath = Environment.CurrentDirectory + "\\" + folderPath + "\\" + fileName;
                     if (i == 1)

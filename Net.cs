@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Net;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace scrape_getfpv_com
 {
@@ -64,6 +66,7 @@ namespace scrape_getfpv_com
                                 break;
                             case "user-agent":
                                 wc.Headers.Add(HttpRequestHeader.UserAgent, headers.Get(i));
+                                Console.WriteLine(headers.Get(i));
                                 break;
                             default:
                                 wc.Headers.Add(headers.GetKey(i), headers.Get(i).ToString());
@@ -130,8 +133,9 @@ namespace scrape_getfpv_com
               case "content-length":
                 wc.Headers.Add(HttpRequestHeader.ContentLength, headers.Get(i).ToString());
                 break;
-              case "user-agent":
+              case "user-agent":            
                 wc.Headers.Add(HttpRequestHeader.UserAgent, headers.Get(i));
+                                Console.WriteLine(headers.Get(i));
                 break;
               default:
                 wc.Headers.Add(headers.GetKey(i), headers.Get(i).ToString());
@@ -160,7 +164,10 @@ namespace scrape_getfpv_com
     {
       using (var wc = new CookieWebClient())
       {
-        wc.DownloadFile(link, filePath);
+                if (!System.IO.File.Exists(filePath))
+                {
+                    wc.DownloadFile(link, filePath);
+                }
       }
     }
   }
