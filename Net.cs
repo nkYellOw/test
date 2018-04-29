@@ -164,10 +164,10 @@ namespace scrape_getfpv_com
     {
       using (var wc = new CookieWebClient())
       {
-                if (!System.IO.File.Exists(filePath))
-                {
+               // if (!System.IO.File.Exists(filePath))
+               // {
                     wc.DownloadFile(link, filePath);
-                }
+                //}
       }
     }
   }

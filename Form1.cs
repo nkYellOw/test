@@ -673,7 +673,10 @@ namespace scrape_getfpv_com
 
                     if (!File.Exists(folderPath + "\\" + fileName))
                     {
-                        net.DownloadFile(imageSrc, folderPath + "\\" + fileName);
+                        if (!new FindFile().LookingFileAllDirectories(folderPath,fileName))
+                        {
+                            net.DownloadFile(imageSrc, folderPath + "\\" + fileName);
+                        }
                     }
 
                     string filePath = Environment.CurrentDirectory + "\\" + folderPath + "\\" + fileName;
