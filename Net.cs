@@ -80,7 +80,7 @@ namespace scrape_getfpv_com
         {
           dataStr = "?" + Func.DictionaryToUrlParam(data);
         }
-
+        
         string res = wc.DownloadString(link + dataStr);
         ResponseUri = wc.ResponseUri.ToString();
         cookie = wc.CookieContainer;
@@ -190,9 +190,21 @@ public class CookieWebClient : WebClient
 
   protected override WebResponse GetWebResponse(WebRequest request)
   {
-    WebResponse response = base.GetWebResponse(request);
+        WebResponse response = null;
+    try
+        {
+            response = base.GetWebResponse(request);
+            _responseUri = response.ResponseUri;
+        }
+        catch(WebException e)
+        {
+            Console.WriteLine("");
+            Console.WriteLine(e.Message);
+            Console.WriteLine("");
+            //    var
+        }
 
-    _responseUri = response.ResponseUri;
+    
     return response;
   }
 

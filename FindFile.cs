@@ -18,7 +18,7 @@ namespace scrape_getfpv_com
                     String findString = allFoundFiles[0];
                     findString = findString.Replace("\\", "/");
                     File.Copy(allFoundFiles[0], folderPath + "\\" + folderName);
-                    Console.WriteLine("have file: " + folderPath + "/" + folderName);
+                    Console.WriteLine("we find file: " + folderPath + "/" + folderName);
                     return true;
                 }
                 

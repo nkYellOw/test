@@ -149,6 +149,8 @@ namespace scrape_getfpv_com
 
         private void Button_StartScrape_Click(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
+
             int downloadDelay = Convert.ToInt32(DownloadDelay.Value)*1000;
             string proxyIp = "";
             if (ProxyIp.SelectedItem != null)
