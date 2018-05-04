@@ -27,6 +27,7 @@ namespace scrape_getfpv_com
 
         string baseUrl = "https://www.getfpv.com";
         List<Category> categories = new List<Category>();
+        
 
         string resultFilePath = "result.csv";
 
@@ -555,6 +556,7 @@ namespace scrape_getfpv_com
                 }
                 else
                 {
+                
                     // В родительской категории нет подкатегорий - проверить на странице
                     string resCategory = net.GET(categories[categories.Count - 1].Link,null,null,null, proxyIp,downloadDelay);
                     var pageCategory = CQ.Create(resCategory);

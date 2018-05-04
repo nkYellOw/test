@@ -10,5 +10,6 @@
     public string Image_2 { get; set; }
     public string Image_3 { get; set; }
     public string Description { get; set; }
-  }
+    public string DescriptionWithTag { get; set; }
+    }
 }
