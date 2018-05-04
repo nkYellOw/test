@@ -552,7 +552,7 @@ namespace scrape_getfpv_com
                                 });
                             }
                         }
-                        break;  
+                        //break;  
                     }
                 }
                 else
@@ -573,7 +573,7 @@ namespace scrape_getfpv_com
                         });
                     }
                 }
-                break;
+                //break;
             }
         }
 
