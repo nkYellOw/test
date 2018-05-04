@@ -587,8 +587,11 @@ namespace scrape_getfpv_com
         /// </summary>
         /// <param name="category">Объект категории</param>
         void ScrapeProductList(Category category,string proxyIp="",int downloadDelay=0)
-        {
+        {   
+            
             string featured = "";
+            bool maximumItemsBox = true;
+
             if(FeaturedCheckBox.Checked)
             {
                 featured = "&dir=asc&order=position";
@@ -656,15 +659,16 @@ namespace scrape_getfpv_com
                     if (maximumItems > 0)
                     {
                         itemsCount += 1;
-                        if (itemsCount >= 50)
+                        if (itemsCount >= maximumItems)
                         {
+                            maximumItemsBox = false;
                             break;
                         }
                     }
                 }
 
                 page++;
-            } while (dom.Find(".pages li a.next").Length > 0 && itemsCount < 51);
+            } while (dom.Find(".pages li a.next").Length > 0 && maximumItemsBox);
         }
 
         /// <summary>
