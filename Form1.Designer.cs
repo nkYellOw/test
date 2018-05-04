@@ -46,11 +46,18 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBoxDownloadPhoto = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.maxItems = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.FeaturedCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DownloadDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxItems)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
@@ -175,6 +182,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.checkBoxDownloadPhoto);
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
@@ -266,6 +274,63 @@
             this.checkBoxDownloadPhoto.Text = "Download Photo";
             this.checkBoxDownloadPhoto.UseVisualStyleBackColor = true;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(2, 133);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(202, 25);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Парсить максимум:";
+            // 
+            // maxItems
+            // 
+            this.maxItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.maxItems.Location = new System.Drawing.Point(210, 129);
+            this.maxItems.Name = "maxItems";
+            this.maxItems.Size = new System.Drawing.Size(120, 29);
+            this.maxItems.TabIndex = 13;
+            this.maxItems.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(348, 133);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(244, 25);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "товаров в каждой группе";
+            // 
+            // FeaturedCheckBox
+            // 
+            this.FeaturedCheckBox.AutoSize = true;
+            this.FeaturedCheckBox.Location = new System.Drawing.Point(6, 28);
+            this.FeaturedCheckBox.Name = "FeaturedCheckBox";
+            this.FeaturedCheckBox.Size = new System.Drawing.Size(116, 29);
+            this.FeaturedCheckBox.TabIndex = 15;
+            this.FeaturedCheckBox.Text = "Featured";
+            this.FeaturedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.FeaturedCheckBox);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.maxItems);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Location = new System.Drawing.Point(398, 208);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(598, 179);
+            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Отборы:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -284,6 +349,9 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DownloadDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxItems)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
     }
@@ -306,6 +374,11 @@
         private System.Windows.Forms.NumericUpDown DownloadDelay;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox ProxyIp;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown maxItems;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox FeaturedCheckBox;
     }
 }
 

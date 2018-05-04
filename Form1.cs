@@ -552,6 +552,7 @@ namespace scrape_getfpv_com
                                 });
                             }
                         }
+                        break;  
                     }
                 }
                 else
@@ -572,6 +573,7 @@ namespace scrape_getfpv_com
                         });
                     }
                 }
+                break;
             }
         }
 
@@ -586,13 +588,23 @@ namespace scrape_getfpv_com
         /// <param name="category">Объект категории</param>
         void ScrapeProductList(Category category,string proxyIp="",int downloadDelay=0)
         {
+            string featured = "";
+            if(FeaturedCheckBox.Checked)
+            {
+                featured = "&dir=asc&order=position";
+            }
+
+            string limit = "?limit=100"+ featured;
+            int itemsCount = 0;
+            int maximumItems = Convert.ToInt32(maxItems.Value);
+
             CQ dom = null;
             int page = 1;
             do
             {
                 AddToListBox($"Категория {category.Name}. Страница {page}");
-
-                string link = category.Link + "?limit=100";
+          
+                string link = category.Link + limit;
                 if (page > 1)
                 {
                     link += "&p=" + page;
@@ -603,7 +615,7 @@ namespace scrape_getfpv_com
                 {
                     // Если произошел редирект на другую страницу - Пример: категория FPV Cameras
                     category.Link = net.ResponseUri;
-                    link = category.Link + "?limit=100";
+                    link = category.Link + limit;
                     if (page > 1)
                     {
                         link += "&p=" + page;
@@ -640,10 +652,19 @@ namespace scrape_getfpv_com
                 for (int i = 0; i < productList.Length; i++)
                 {
                     ScrapeProduct(productList.Eq(i).Text().Trim(), productList.Eq(i).Attr("href"),proxyIp,downloadDelay);
+
+                    if (maximumItems > 0)
+                    {
+                        itemsCount += 1;
+                        if (itemsCount >= 50)
+                        {
+                            break;
+                        }
+                    }
                 }
 
                 page++;
-            } while (dom.Find(".pages li a.next").Length > 0);
+            } while (dom.Find(".pages li a.next").Length > 0 && itemsCount < 51);
         }
 
         /// <summary>
